@@ -6,9 +6,10 @@ import model
 import mriHandler
 import utils
 import argparse
+tf.logging.set_verbosity(tf.logging.ERROR)
 
 parser = argparse.ArgumentParser(description="Which training step")
-parser.add_argument("-c", "--checkpoint", type=int, default=0, help="Enter the checkpoint number")
+parser.add_argument("-c", "--checkpoint", type=int, default=None, help="Enter the checkpoint number")
 parser = parser.parse_args()
 STEP = parser.checkpoint
 
@@ -49,7 +50,8 @@ file_writer = tf.summary.FileWriter(logdir, flush_secs=5)
 
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
-    saver.restore(sess, f'checkpoints/model-{STEP}')
+    if STEP:
+        saver.restore(sess, f'checkpoints/model-{STEP}')
 
     for i in range(STEP, 6000):
 
