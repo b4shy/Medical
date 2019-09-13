@@ -1,0 +1,7 @@
+numpy
+tensorflow-gpu==1.14
+matplotlib
+nilearn
+scipy
+sklearn
+batchgenerators
