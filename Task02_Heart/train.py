@@ -39,7 +39,7 @@ val_pixel_acc_summary = tf.summary.scalar("Val_Pixel_Acc", val_pixel_acc_feed)
 segnet = model.SegNetBasic(2)
 prediction = segnet.predict(input_im, is_training=True)
 cost = segnet.loss(prediction, mask)
-optimizer = segnet.optimizer(1e-5)
+optimizer = segnet.optimizer(5e-6)
 train_op = optimizer.minimize(cost)
 
 # Logwriter

@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"]="-1"
+#os.environ["CUDA_VISIBLE_DEVICES"]="-1"
 import tensorflow as tf
 import model
 import mriHandler
@@ -29,7 +29,7 @@ with tf.Session() as sess:
     tf.global_variables_initializer()
     saver.restore(sess, checkpoint)
     img, label = dh.load_val_data("val/")
-    #img, _, label = dh.next_batch(1)
+    #img, _, label = dh.next_batch(3)
     pred = sess.run(prediction, feed_dict={input_im: np.expand_dims(img[img_no],0)})
     pred = utils.create_prediction_and_label(pred)
 

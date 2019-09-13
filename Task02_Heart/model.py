@@ -53,7 +53,8 @@ class SegNetBasic:
     def _encoder_block(self, data, no_filters, shortcut):
         u1 = tf.layers.conv3d_transpose(data, no_filters, kernel_size=[7, 7, 7], strides=[2, 2, 2], padding="same")
         if shortcut is not None:
-            u1 = tf.add(u1, shortcut)
+            u1 = tf.concat([u1, shortcut], axis=-1)
+        u1 = tf.layers.conv3d(u1, no_filters, [1, 1, 1], padding="same")
         conv_layer1 = tf.layers.conv3d(u1, no_filters, [3, 3, 3], padding="same")
         conv_layer2 = tf.layers.conv3d(conv_layer1, no_filters, [3, 3, 3], padding="same")
         return conv_layer2
