@@ -1,11 +1,15 @@
 import os
 import numpy as np
 from nilearn import image
+from imgaug import augmenters as iaa
+import imgaug as ia
 
 
 class MRIHandler():
+
     INPUT_SHAPE = (320, 320, 80)
     LAST_CHANNEL_NO = INPUT_SHAPE[2]
+    ROTATION_PARAMS = np.array([0, 45, 90, 135, 180, 225, 270])
 
     IMG_PATH = "imagesTr/"
     LABEL_PATH = "labelsTr/"
@@ -21,8 +25,28 @@ class MRIHandler():
         self.batch_size = batch_size
         ind = np.random.choice(self.paths_to_all_imgs, batch_size)
         imgs, labels = self._load_batch(ind)
-        label_mask = self._create_one_hot_label(labels)
-        return imgs, label_mask, labels
+
+        aug_img, aug_labels = self.augment(imgs, labels)
+
+        label_mask = self._create_one_hot_label(aug_labels)
+
+        return aug_img, label_mask, aug_labels
+
+    def augment(self, imgs, labels):
+        index = np.random.randint(0, 4, size=self.batch_size)
+        actual_rotation = self.ROTATION_PARAMS[index]
+
+        imgs = np.squeeze(imgs, -1)
+        aug_imgs = []
+        aug_labels = []
+
+        for i in range(len(actual_rotation)):
+            rotate = iaa.Affine(rotate=(actual_rotation[i]))
+
+            aug_imgs.append(rotate.augment_image(imgs[i]))
+            aug_labels.append(rotate.augment_image(labels[i]))
+
+        return np.expand_dims(aug_imgs, -1), np.array(aug_labels)
 
     def _load_batch(self, ind):
         imgs = []

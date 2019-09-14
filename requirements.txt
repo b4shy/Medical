@@ -4,5 +4,4 @@ matplotlib
 nilearn
 scipy
 sklearn
-batchgenerators
-albumentations
+imgaug
