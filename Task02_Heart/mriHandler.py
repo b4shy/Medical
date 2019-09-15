@@ -2,7 +2,6 @@ import os
 import numpy as np
 from nilearn import image
 from imgaug import augmenters as iaa
-import imgaug as ia
 
 
 class MRIHandler():
@@ -33,18 +32,23 @@ class MRIHandler():
         return aug_img, label_mask, aug_labels
 
     def augment(self, imgs, labels):
-        index = np.random.randint(0, 4, size=self.batch_size)
-        actual_rotation = self.ROTATION_PARAMS[index]
 
         imgs = np.squeeze(imgs, -1)
         aug_imgs = []
         aug_labels = []
+        iaa.Sequential()
 
-        for i in range(len(actual_rotation)):
-            rotate = iaa.Affine(rotate=(actual_rotation[i]))
+        for i in range(self.batch_size):
+            aug = iaa.Sequential([
+                iaa.Affine(rotate=(-90, 90), mode="constant", name="MyAffine"),
+                iaa.Sometimes(0.5,
+                              iaa.PiecewiseAffine(scale=(0.01, 0.05)))
+            ])
 
-            aug_imgs.append(rotate.augment_image(imgs[i]))
-            aug_labels.append(rotate.augment_image(labels[i]))
+            seq_imgs_deterministic = aug.to_deterministic()
+
+            aug_imgs.append(seq_imgs_deterministic.augment_image(imgs[i]))
+            aug_labels.append(seq_imgs_deterministic.augment_image(labels[i]))
 
         return np.expand_dims(aug_imgs, -1), np.array(aug_labels)
 

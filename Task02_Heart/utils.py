@@ -42,4 +42,4 @@ def show_prediction_and_label(prediction, label, img):
         ax.imshow(prediction2[0, :, :, i, 0], alpha=1, cmap="Reds")
         ax.imshow(orig[:, :, i], alpha=0.5, cmap="coolwarm")
         fig.canvas.draw()
-        plt.waitforbuttonpress()
+    plt.waitforbuttonpress()
