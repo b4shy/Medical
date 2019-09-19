@@ -28,6 +28,8 @@ mask = tf.placeholder(dtype=tf.float32, shape=[None, INPUT_SHAPE[0], INPUT_SHAPE
 loss_feed = tf.placeholder(tf.float32)
 pixel_acc_feed = tf.placeholder(tf.float32)
 val_pixel_acc_feed = tf.placeholder(tf.float32)
+global_step = tf.Variable(0, name='global_step', trainable=False)
+
 
 # Summaries
 loss_summary = tf.summary.scalar("Loss", loss_feed)
@@ -40,7 +42,7 @@ segnet = model.SegNetBasic(2)
 prediction = segnet.predict(input_im, is_training=True)
 cost = segnet.loss(prediction, mask)
 optimizer = segnet.optimizer(1e-4)
-train_op = optimizer.minimize(cost)
+train_op = optimizer.minimize(cost, global_step=global_step)
 
 # Logwriter
 saver = tf.train.Saver(max_to_keep=30)
@@ -52,8 +54,9 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     if STEP:
         saver.restore(sess, f'checkpoints/model-{STEP}')
+        print(sess.run(global_step))
 
-    for i in range(STEP, 6000):
+    for i in range(STEP, 3000):
 
         img_batch, label_batch, orig_labels = dh.next_batch(1)
         _, loss, pred = sess.run([train_op, cost, prediction], feed_dict={input_im: img_batch, mask: label_batch})

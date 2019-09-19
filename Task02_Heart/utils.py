@@ -11,7 +11,7 @@ def create_prediction_and_label(prediction):
 def pixel_accuracy(prediction, mask, no_classes=2):
     prediction = np.squeeze(prediction, axis=4)
     sum = 0
-    target_sum = np.sum((mask > 0))
+    target_sum = np.sum(mask > 0)
 
     for i in range(1, no_classes):
         target = (mask == i)
@@ -35,7 +35,7 @@ def show_prediction_and_label(prediction, label, img):
     prediction2 = np.ma.masked_where(test_prediction == 0, test_prediction)
     orig = np.ma.masked_where(label == 0, label)
 
-    for i in range(80):
+    for i in range(128):
         ax.clear()
         ax.imshow(img[0, :, :, i, 0])
 

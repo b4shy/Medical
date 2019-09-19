@@ -3,7 +3,7 @@ import numpy as np
 
 
 class SegNetBasic:
-    INPUT_SHAPE = [320, 320, 80]
+    INPUT_SHAPE = [320, 320, 128]
 
     def __init__(self, no_classes):
         self.classes = no_classes
@@ -30,7 +30,7 @@ class SegNetBasic:
         return e4
 
     def loss(self, image, mask):
-        class_weight = tf.constant([0.01, 1])
+        class_weight = tf.constant([0.15, 1])
         logits = tf.multiply(image, class_weight)
         print(logits)
         recon_error = tf.nn.softmax_cross_entropy_with_logits(labels=mask, logits=image)
