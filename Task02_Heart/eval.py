@@ -1,5 +1,3 @@
-import os
-#os.environ["CUDA_VISIBLE_DEVICES"]="-1"
 import tensorflow as tf
 import model
 import mriHandler
@@ -9,7 +7,7 @@ import argparse
 
 
 parser = argparse.ArgumentParser(description="Segment unseen heart MRIs")
-parser.add_argument("-c", "--checkpoint", type=str, help="path to checkpoint/weights", default="checkpoints/model-3800")
+parser.add_argument("-c", "--checkpoint", type=str, help="path to checkpoint/weights", default="checkpoints/model-1700")
 parser.add_argument("-i", "--img_no", type=int, help="Path to MRI", default=0)
 args = parser.parse_args()
 
@@ -28,8 +26,8 @@ saver = tf.train.Saver()
 with tf.Session() as sess:
     tf.global_variables_initializer()
     saver.restore(sess, checkpoint)
-    #img, label = dh.load_val_data("val/")
-    img, _, label = dh.next_batch(3)
+    img, label = dh.load_val_data("val/")
+    #img, _, label = dh.next_batch(3)
     pred = sess.run(prediction, feed_dict={input_im: np.expand_dims(img[img_no],0)})
     pred = utils.create_prediction_and_label(pred)
 
