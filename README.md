@@ -1,7 +1,7 @@
 # Medical
-This repository contains tasks from the Medical Segmentation Dataset. (https://arxiv.org/abs/1902.09063)
+Atrium Segmentation based on MRI Images. (A large annotated medical image dataset for the development and evaluation of segmentation algorithms: https://arxiv.org/abs/1902.09063)
 
-At the moment there exists a network for segmenting the Atrium of the Heart
+
 
 ![](atrium.gif)
 
